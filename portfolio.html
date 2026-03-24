@@ -1,0 +1,1229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Piyush Misal | Portfolio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Bebas+Neue&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #03040a;
+            --surface: #080c14;
+            --card: #0d1220;
+            --border: rgba(0, 230, 255, 0.15);
+            --accent: #00e5ff;
+            --accent2: #7c3aed;
+            --accent3: #ff3e6c;
+            --text: #e8edf5;
+            --muted: #5a6480;
+            --glow: 0 0 40px rgba(0, 229, 255, 0.25);
+        }
+
+        *, *::before, *::after {
+            margin: 0; padding: 0;
+            box-sizing: border-box;
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            overflow-x: hidden;
+            cursor: none;
+        }
+
+        /* ── CUSTOM CURSOR ── */
+        .cursor-dot {
+            width: 8px; height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9999;
+            transition: transform 0.1s ease;
+            mix-blend-mode: difference;
+        }
+        .cursor-ring {
+            width: 36px; height: 36px;
+            border: 1px solid rgba(0,229,255,0.5);
+            border-radius: 50%;
+            position: fixed; top: 0; left: 0;
+            pointer-events: none;
+            z-index: 9998;
+            transition: transform 0.12s ease, width 0.3s, height 0.3s, border-color 0.3s;
+        }
+        .cursor-ring.hovered {
+            width: 56px; height: 56px;
+            border-color: var(--accent);
+            background: rgba(0,229,255,0.06);
+        }
+
+        /* ── NOISE GRAIN OVERLAY ── */
+        body::before {
+            content: '';
+            position: fixed; inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9997;
+            opacity: 0.5;
+        }
+
+        /* ── SCROLLBAR ── */
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 2px; }
+
+        /* ── NAV ── */
+        nav {
+            position: fixed; top: 0; left: 0; right: 0;
+            z-index: 100;
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(3,4,10,0.8);
+            backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--border);
+            transition: padding 0.3s;
+        }
+        .nav-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.6rem;
+            letter-spacing: 3px;
+            color: var(--accent);
+            text-shadow: var(--glow);
+        }
+        .nav-links {
+            display: flex;
+            gap: 35px;
+            list-style: none;
+        }
+        .nav-links a {
+            color: var(--muted);
+            text-decoration: none;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: color 0.3s;
+            position: relative;
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -4px; left: 0;
+            width: 0; height: 1px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+        .nav-links a:hover { color: var(--accent); }
+        .nav-links a:hover::after { width: 100%; }
+
+        /* ── HERO ── */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 0 8%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Animated grid background */
+        .hero-grid {
+            position: absolute; inset: 0;
+            background-image: 
+                linear-gradient(rgba(0,229,255,0.04) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0,229,255,0.04) 1px, transparent 1px);
+            background-size: 60px 60px;
+            animation: gridMove 20s linear infinite;
+        }
+        @keyframes gridMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(60px); }
+        }
+
+        /* Glowing orbs */
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            pointer-events: none;
+            animation: float 8s ease-in-out infinite;
+        }
+        .orb-1 {
+            width: 500px; height: 500px;
+            background: rgba(124, 58, 237, 0.12);
+            top: -100px; right: -100px;
+        }
+        .orb-2 {
+            width: 300px; height: 300px;
+            background: rgba(0, 229, 255, 0.08);
+            bottom: 100px; left: 10%;
+            animation-delay: -4s;
+        }
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-30px) scale(1.05); }
+        }
+
+        .hero-tag {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.75rem;
+            color: var(--accent);
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.3s forwards;
+        }
+
+        .hero h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: clamp(4rem, 10vw, 9rem);
+            line-height: 0.9;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.5s forwards;
+        }
+        .hero h1 .name-accent {
+            display: block;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(0,229,255,0.6);
+            position: relative;
+        }
+        .hero h1 .name-accent::after {
+            content: attr(data-text);
+            position: absolute;
+            left: 0; top: 0;
+            color: var(--accent);
+            clip-path: polygon(0 0, 0 0, 0 100%, 0 100%);
+            animation: revealText 1.2s ease 1.2s forwards;
+        }
+        @keyframes revealText {
+            to { clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%); }
+        }
+
+        .hero-desc {
+            font-size: 1.1rem;
+            color: var(--muted);
+            max-width: 520px;
+            line-height: 1.8;
+            margin-top: 30px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 0.9s forwards;
+        }
+
+        .hero-badges {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 35px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.1s forwards;
+        }
+        .badge {
+            padding: 8px 16px;
+            border: 1px solid var(--border);
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            background: rgba(0,229,255,0.04);
+            transition: all 0.3s;
+        }
+        .badge:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            background: rgba(0,229,255,0.08);
+        }
+
+        .hero-cta {
+            margin-top: 50px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.3s forwards;
+        }
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--accent);
+            color: var(--bg);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: none;
+            border-radius: 4px;
+            cursor: none;
+            transition: all 0.3s;
+            box-shadow: 0 0 30px rgba(0,229,255,0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 50px rgba(0,229,255,0.5);
+        }
+        .btn-outline {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: transparent;
+            color: var(--text);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-decoration: none;
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            cursor: none;
+            transition: all 0.3s;
+            margin-left: 16px;
+        }
+        .btn-outline:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* Scroll line */
+        .scroll-line {
+            position: absolute;
+            bottom: 40px; left: 8%;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeUp 0.8s ease 1.6s forwards;
+        }
+        .scroll-line span {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+        }
+        .scroll-bar {
+            width: 60px; height: 1px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            animation: scrollPulse 2s ease-in-out infinite;
+        }
+        @keyframes scrollPulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* ── STATS BAR ── */
+        .stats-bar {
+            padding: 50px 8%;
+            border-top: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            background: var(--surface);
+        }
+        .stat-item {
+            text-align: center;
+        }
+        .stat-num {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            color: var(--accent);
+            line-height: 1;
+            display: block;
+        }
+        .stat-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        /* ── SECTION SHARED ── */
+        section { padding: 120px 8%; }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 80px;
+        }
+        .section-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.7rem;
+            color: var(--accent);
+            opacity: 0.6;
+        }
+        .section-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3.5rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            line-height: 1;
+        }
+        .section-line {
+            flex: 1;
+            height: 1px;
+            background: linear-gradient(90deg, var(--border), transparent);
+        }
+
+        /* ── PROJECTS GRID ── */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+        }
+
+        .project-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            overflow: hidden;
+            cursor: none;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+            group: true;
+        }
+        .project-card:hover {
+            transform: translateY(-8px);
+            border-color: rgba(0,229,255,0.4);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,229,255,0.1);
+        }
+        .project-card.featured {
+            grid-column: span 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+        }
+
+        .card-media {
+            position: relative;
+            overflow: hidden;
+        }
+        .project-card.featured .card-media {
+            height: 100%;
+            min-height: 320px;
+        }
+        .project-card:not(.featured) .card-media {
+            height: 220px;
+        }
+        .card-media img {
+            width: 100%; height: 100%;
+            object-fit: cover;
+            filter: grayscale(80%) brightness(0.6);
+            transition: all 0.6s ease;
+        }
+        .project-card:hover .card-media img {
+            filter: grayscale(0%) brightness(0.8);
+            transform: scale(1.05);
+        }
+        .card-media-overlay {
+            position: absolute; inset: 0;
+            background: linear-gradient(135deg, rgba(0,229,255,0.15) 0%, transparent 60%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+        .project-card:hover .card-media-overlay {
+            opacity: 1;
+        }
+
+        /* Tech badge on image */
+        .tech-stack {
+            position: absolute;
+            bottom: 14px; left: 14px;
+            display: flex; gap: 6px; flex-wrap: wrap;
+        }
+        .tech-tag {
+            padding: 4px 10px;
+            background: rgba(3,4,10,0.85);
+            border: 1px solid rgba(0,229,255,0.3);
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.62rem;
+            color: var(--accent);
+            backdrop-filter: blur(10px);
+        }
+
+        /* Status badge */
+        .status-badge {
+            position: absolute;
+            top: 14px; right: 14px;
+            padding: 5px 12px;
+            border-radius: 100px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.6rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .status-badge.progress {
+            background: rgba(255, 200, 0, 0.15);
+            border: 1px solid rgba(255,200,0,0.4);
+            color: #ffc800;
+        }
+        .status-badge.active {
+            background: rgba(0,255,140,0.15);
+            border: 1px solid rgba(0,255,140,0.4);
+            color: #00ff8c;
+        }
+
+        .card-body {
+            padding: 28px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+        .project-card.featured .card-body {
+            padding: 40px;
+        }
+
+        .card-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .card-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 2rem;
+            letter-spacing: 2px;
+            margin-bottom: 14px;
+            transition: color 0.3s;
+        }
+        .project-card:hover .card-title {
+            color: var(--accent);
+        }
+        .project-card.featured .card-title {
+            font-size: 2.8rem;
+        }
+        .card-desc {
+            color: var(--muted);
+            font-size: 0.9rem;
+            line-height: 1.75;
+            flex: 1;
+        }
+        .card-arrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--accent);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-top: 24px;
+            cursor: none;
+            transition: gap 0.3s;
+        }
+        .project-card:hover .card-arrow {
+            gap: 14px;
+        }
+
+        /* ── SKILLS / ABOUT ── */
+        .about-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 80px;
+            align-items: start;
+        }
+        .about-text p {
+            color: var(--muted);
+            line-height: 1.85;
+            font-size: 1rem;
+            margin-bottom: 20px;
+        }
+        .about-text p strong {
+            color: var(--text);
+        }
+
+        .skills-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+        .skill-row {
+            display: grid;
+            grid-template-columns: 140px 1fr 40px;
+            align-items: center;
+            gap: 16px;
+        }
+        .skill-name {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.72rem;
+            color: var(--muted);
+            letter-spacing: 1px;
+        }
+        .skill-bar-bg {
+            height: 4px;
+            background: rgba(255,255,255,0.06);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+        .skill-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent2), var(--accent));
+            border-radius: 2px;
+            width: 0;
+            transition: width 1.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+        }
+        .skill-pct {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            text-align: right;
+        }
+
+        /* ── CONTACT ── */
+        .contact-wrapper {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 60px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            position: relative;
+            overflow: hidden;
+        }
+        .contact-wrapper::before {
+            content: '';
+            position: absolute;
+            top: -100px; right: -100px;
+            width: 400px; height: 400px;
+            background: radial-gradient(circle, rgba(124,58,237,0.12), transparent 70%);
+            pointer-events: none;
+        }
+        .contact-headline {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 4rem;
+            letter-spacing: 4px;
+            line-height: 1;
+        }
+        .contact-headline span {
+            display: block;
+            color: transparent;
+            -webkit-text-stroke: 1px rgba(0,229,255,0.5);
+        }
+        .contact-sub {
+            color: var(--muted);
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-top: 20px;
+        }
+        .contact-links {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            justify-content: center;
+        }
+        .contact-link {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px 20px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            text-decoration: none;
+            color: var(--text);
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+        .contact-link:hover {
+            border-color: var(--accent);
+            background: rgba(0,229,255,0.05);
+            color: var(--accent);
+            transform: translateX(6px);
+        }
+        .contact-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* ── FOOTER ── */
+        footer {
+            padding: 30px 8%;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        footer p {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--muted);
+            letter-spacing: 2px;
+        }
+        .footer-logo {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 1.4rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+        }
+
+        /* ── MODAL ── */
+        .modal-overlay {
+            position: fixed; inset: 0;
+            background: rgba(3,4,10,0.92);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 500;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.4s ease;
+        }
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        .modal-box {
+            background: var(--card);
+            border: 1px solid rgba(0,229,255,0.2);
+            border-radius: 16px;
+            max-width: 780px;
+            width: 100%;
+            max-height: 85vh;
+            overflow-y: auto;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.4s cubic-bezier(0.25,0.8,0.25,1);
+            position: relative;
+            box-shadow: 0 40px 120px rgba(0,0,0,0.8), 0 0 0 1px rgba(0,229,255,0.05);
+        }
+        .modal-overlay.active .modal-box {
+            transform: translateY(0) scale(1);
+        }
+        .modal-img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 16px 16px 0 0;
+            filter: brightness(0.6);
+        }
+        .modal-body {
+            padding: 40px;
+        }
+        .modal-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--accent);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .modal-title {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 3rem;
+            letter-spacing: 3px;
+            margin-bottom: 24px;
+        }
+        .modal-text {
+            color: var(--muted);
+            line-height: 1.85;
+            font-size: 0.95rem;
+        }
+        .modal-meta {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-top: 28px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border);
+        }
+        .modal-close {
+            position: absolute;
+            top: 16px; right: 16px;
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.05);
+            border: 1px solid var(--border);
+            display: flex; align-items: center; justify-content: center;
+            cursor: none;
+            color: var(--muted);
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            z-index: 10;
+        }
+        .modal-close:hover {
+            background: rgba(0,229,255,0.1);
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ── REVEAL ON SCROLL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* responsive */
+        @media (max-width: 900px) {
+            .projects-grid { grid-template-columns: 1fr; }
+            .project-card.featured { grid-column: span 1; grid-template-columns: 1fr; }
+            .project-card.featured .card-media { height: 220px; }
+            .about-grid { grid-template-columns: 1fr; gap: 50px; }
+            .contact-wrapper { grid-template-columns: 1fr; }
+            .stats-bar { grid-template-columns: repeat(2, 1fr); }
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-ring" id="cursorRing"></div>
+
+    <!-- NAV -->
+    <nav>
+        <div class="nav-logo">PM</div>
+        <ul class="nav-links">
+            <li><a href="#projects">Projects</a></li>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- HERO -->
+    <section class="hero">
+        <div class="hero-grid"></div>
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+
+        <span class="hero-tag">/// Mechanical Engineering × Robotics × AI</span>
+        <h1>
+            Piyush
+            <span class="name-accent" data-text="Misal">Misal</span>
+        </h1>
+        <p class="hero-desc">
+            1st year Mechanical student at MIT Academy of Engineering. Building robots, training AI, and learning Japanese — one commit at a time.
+        </p>
+        <div class="hero-badges">
+            <span class="badge">⚙ Mechanical Eng.</span>
+            <span class="badge">🤖 Robotics</span>
+            <span class="badge">🐍 Python Dev</span>
+            <span class="badge">🇯🇵 Japanese N5</span>
+            <span class="badge">🌌 TARS Builder</span>
+        </div>
+        <div class="hero-cta">
+            <a href="#projects" class="btn-primary">View Projects →</a>
+            <a href="#contact" class="btn-outline">Get In Touch</a>
+        </div>
+        <div class="scroll-line">
+            <span>Scroll</span>
+            <div class="scroll-bar"></div>
+        </div>
+    </section>
+
+    <!-- STATS -->
+    <div class="stats-bar reveal">
+        <div class="stat-item">
+            <span class="stat-num">7.3</span>
+            <span class="stat-label">Sem 1 SGPA</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">4+</span>
+            <span class="stat-label">Projects Built</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">3</span>
+            <span class="stat-label">AI Assistants</span>
+        </div>
+        <div class="stat-item">
+            <span class="stat-num">N5</span>
+            <span class="stat-label">Japanese Level</span>
+        </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <section id="projects">
+        <div class="section-header reveal">
+            <span class="section-num">01</span>
+            <h2 class="section-title">Projects & Achievements</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="projects-grid">
+
+            <!-- TARS - Featured -->
+            <div class="project-card featured reveal" onclick="openModal('modal1')">
+                <div class="card-media">
+                    <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200" alt="Project TARS">
+                    <div class="card-media-overlay"></div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Arduino</span>
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Servo Motors</span>
+                        <span class="tech-tag">Gemini API</span>
+                    </div>
+                    <span class="status-badge progress">In Progress</span>
+                </div>
+                <div class="card-body">
+                    <div>
+                        <div class="card-label">Flagship Project</div>
+                        <div class="card-title">Project TARS</div>
+                        <p class="card-desc">A functional miniature replica of the Interstellar robot, complete with high-torque servo walking mechanism and an integrated AI voice assistant powered by Nexus v3 & the Gemini API. The most ambitious build yet.</p>
+                    </div>
+                    <div class="card-arrow">View Details <span>→</span></div>
+                </div>
+            </div>
+
+            <!-- AI Assistant -->
+            <div class="project-card reveal" onclick="openModal('modal3')">
+                <div class="card-media">
+                    <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=800" alt="Python">
+                    <div class="card-media-overlay"></div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Python</span>
+                        <span class="tech-tag">Gemini</span>
+                        <span class="tech-tag">DeepSeek</span>
+                        <span class="tech-tag">ElevenLabs</span>
+                    </div>
+                    <span class="status-badge progress">V3 Dev</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-label">AI / Dev</div>
+                    <div class="card-title">Nexus AI Assistant</div>
+                    <p class="card-desc">Personal AI chatbot with Gemini API, fallback to DeepSeek 8B, and ElevenLabs TTS. Built through trial, error, and a lot of late nights.</p>
+                    <div class="card-arrow">View Details <span>→</span></div>
+                </div>
+            </div>
+
+            <!-- Robotics -->
+            <div class="project-card reveal" onclick="openModal('modal2')">
+                <div class="card-media">
+                    <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?q=80&w=800" alt="Robotics">
+                    <div class="card-media-overlay"></div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">MIT-AOE</span>
+                        <span class="tech-tag">Mech. Eng.</span>
+                    </div>
+                    <span class="status-badge active">Active</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-label">Education</div>
+                    <div class="card-title">Robotics Journey</div>
+                    <p class="card-desc">1st year at MIT Academy of Engineering. 7.3 SGPA, participation in Tata Crucial Quiz, maths poster finalist & more to come.</p>
+                    <div class="card-arrow">View Details <span>→</span></div>
+                </div>
+            </div>
+
+            <!-- Japanese -->
+            <div class="project-card reveal" onclick="openModal('modal4')">
+                <div class="card-media">
+                    <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=800" alt="Japan">
+                    <div class="card-media-overlay"></div>
+                    <div class="tech-stack">
+                        <span class="tech-tag">Duolingo</span>
+                        <span class="tech-tag">Bunpo</span>
+                        <span class="tech-tag">JLPT N5</span>
+                    </div>
+                    <span class="status-badge active">Learning</span>
+                </div>
+                <div class="card-body">
+                    <div class="card-label">Language</div>
+                    <div class="card-title">Japanese Language</div>
+                    <p class="card-desc">Learning Hiragana, Katakana & Kanji to study Robotics & AI at a Japanese university. Culture + career combined.</p>
+                    <div class="card-arrow">View Details <span>→</span></div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ABOUT / SKILLS -->
+    <section id="about" style="background: var(--surface); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="section-header reveal">
+            <span class="section-num">02</span>
+            <h2 class="section-title">About & Skills</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-text reveal">
+                <p>I'm <strong>Piyush Misal</strong>, a first-year Mechanical Engineering student at <strong>MIT Academy of Engineering, Pune</strong>. I sit at the intersection of hardware and software — I love building things that move, think, and speak.</p>
+                <p>From replicating an Interstellar robot to building my own AI assistant from the ground up, every project is a new adventure in problem-solving. Errors aren't setbacks; they're the best teachers.</p>
+                <p>My long-term goal is to pursue a <strong>Master's degree in Robotics/AI abroad</strong> — ideally at a Japanese university — combining my love for their engineering culture and language.</p>
+            </div>
+
+            <div class="reveal">
+                <div class="skills-list">
+                    <div class="skill-row">
+                        <span class="skill-name">Python</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="80"></div></div>
+                        <span class="skill-pct">80%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">Arduino/C++</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="55"></div></div>
+                        <span class="skill-pct">55%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">Robotics Design</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="65"></div></div>
+                        <span class="skill-pct">65%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">AI / ML</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="50"></div></div>
+                        <span class="skill-pct">50%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">Japanese</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="20"></div></div>
+                        <span class="skill-pct">20%</span>
+                    </div>
+                    <div class="skill-row">
+                        <span class="skill-name">Web Dev</span>
+                        <div class="skill-bar-bg"><div class="skill-bar-fill" data-w="60"></div></div>
+                        <span class="skill-pct">60%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section id="contact">
+        <div class="section-header reveal">
+            <span class="section-num">03</span>
+            <h2 class="section-title">Get In Touch</h2>
+            <div class="section-line"></div>
+        </div>
+
+        <div class="contact-wrapper reveal">
+            <div>
+                <h3 class="contact-headline">
+                    Let's Build
+                    <span>Something</span>
+                    Together.
+                </h3>
+                <p class="contact-sub">Whether it's a robotics collab, a Python project, or just a chat about AI and Japan — I'm always up for it. Reach out!</p>
+            </div>
+            <div class="contact-links">
+                <a href="https://www.linkedin.com/in/piyush-misal-139446366/" class="contact-link">
+                    <span class="contact-icon">💼</span>
+                    <span>LinkedIn — Piyush Misal</span>
+                </a>
+                <a href="https://github.com/piyushmisal212-stack" class="contact-link">
+                    <span class="contact-icon">⚙️</span>
+                    <span>GitHub — Projects & Code</span>
+                </a>
+                <a href="mail to:piyushmisal212@gmail.com" class="contact-link">
+                    <span class="contact-icon">✉️</span>
+                    <span>Email Me Directly</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <p>© 2025 Piyush Misal — Built with intention.</p>
+        <div class="footer-logo">PM</div>
+        <p>MIT Academy of Engineering · Pune</p>
+    </footer>
+
+    <!-- ── MODALS ── -->
+    <div class="modal-overlay" id="modal1" onclick="handleOverlayClick(event,'modal1')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modal1')">✕</button>
+            <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=1200" class="modal-img" alt="TARS">
+            <div class="modal-body">
+                <div class="modal-label">Flagship Project</div>
+                <h2 class="modal-title">Project TARS</h2>
+                <p class="modal-text">
+                    This is my biggest dream project: a fully functional miniature TARS from <em>Interstellar</em>. The goal is to replicate its iconic walking mechanism using high-torque servos controlled via Arduino, and pair it with my AI voice assistant <strong>Nexus</strong> so it can actually converse like the character in the film.
+                    <br><br>
+                    Nexus uses the Gemini API for intelligence, with a DeepSeek 8B model fallback when credits run low. ElevenLabs handles voice — falling back to Edge TTS when needed. I'm currently finalizing the chassis design and balancing algorithms, while Nexus v3 is simultaneously under development. 
+                    <br><br>
+                    It's still a work in progress, but seeing it come to life will absolutely be worth the wait.
+                </p>
+                <div class="modal-meta">
+                    <span class="tech-tag">Arduino</span>
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Servo Motors</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">ElevenLabs</span>
+                    <span class="status-badge progress" style="position:static">In Progress</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal2" onclick="handleOverlayClick(event,'modal2')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modal2')">✕</button>
+            <img src="https://images.unsplash.com/photo-1531746790731-6c087fecd65a?q=80&w=1200" class="modal-img" alt="Robotics">
+            <div class="modal-body">
+                <div class="modal-label">Education & Milestones</div>
+                <h2 class="modal-title">Robotics Journey</h2>
+                <p class="modal-text">
+                    As a 1st year Mechanical Engineering student at <strong>MIT Academy of Engineering, Pune</strong>, I've been actively bridging the gap between hardware and software from day one.
+                    <br><br>
+                    Highlights so far: <strong>7.3 SGPA</strong> in Semester 1, a Tata Crucial Quiz participation certificate from Unstop (featured on LinkedIn), and our team qualifying for the finals of a maths poster competition. We didn't win — but it lit a fire.
+                    <br><br>
+                    My plan is to keep stacking competitions, certificates, and projects to build a strong resume for a <strong>Master's abroad</strong> — ideally in Japan or the UK, focusing on Robotics & AI.
+                </p>
+                <div class="modal-meta">
+                    <span class="tech-tag">MIT-AOE Pune</span>
+                    <span class="tech-tag">SGPA 7.3</span>
+                    <span class="tech-tag">Mech. Eng.</span>
+                    <span class="status-badge active" style="position:static">Active</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal3" onclick="handleOverlayClick(event,'modal3')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modal3')">✕</button>
+            <img src="https://images.unsplash.com/photo-1555066931-4365d14bab8c?q=80&w=1200" class="modal-img" alt="Code">
+            <div class="modal-body">
+                <div class="modal-label">AI / Python Development</div>
+                <h2 class="modal-title">Nexus AI Assistant</h2>
+                <p class="modal-text">
+                    Nexus started as my very first real AI project — and what a journey it's been. I built two basic TTS chatbots first to understand the fundamentals, then leveled up to create Nexus.
+                    <br><br>
+                    It uses <strong>Gemini's API</strong> as its primary brain, with <strong>DeepSeek's 8B parameter model</strong> as a smart fallback when credits run low. For voice, <strong>ElevenLabs TTS</strong> handles output — with Edge TTS as backup. The whole system is gracefully resilient.
+                    <br><br>
+                    I relied on YouTube, GitHub, and Gemini itself to learn and debug throughout. Hundreds of errors, hundreds of solutions — and all of it made the process genuinely adventurous. <strong>Nexus v3</strong> is now in development.
+                </p>
+                <div class="modal-meta">
+                    <span class="tech-tag">Python</span>
+                    <span class="tech-tag">Gemini API</span>
+                    <span class="tech-tag">DeepSeek 8B</span>
+                    <span class="tech-tag">ElevenLabs</span>
+                    <span class="tech-tag">Edge TTS</span>
+                    <span class="status-badge progress" style="position:static">V3 In Dev</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal4" onclick="handleOverlayClick(event,'modal4')">
+        <div class="modal-box">
+            <button class="modal-close" onclick="closeModal('modal4')">✕</button>
+            <img src="https://images.unsplash.com/photo-1528164344705-47542687000d?q=80&w=1200" class="modal-img" alt="Japan">
+            <div class="modal-body">
+                <div class="modal-label">Language Studies</div>
+                <h2 class="modal-title">Japanese Language</h2>
+                <p class="modal-text">
+                    I'm currently learning Japanese via <strong>Duolingo</strong> and <strong>Bunpo</strong> — working through Hiragana, Katakana, and beginner Kanji, sitting at around JLPT <strong>N5 level</strong> (or slightly below, but growing every day 😄).
+                    <br><br>
+                    The reason goes beyond language: Japan is at the forefront of Robotics and AI research, and I want to study their technology at its source. Plus, I genuinely love Japanese culture — the discipline, the craftsmanship, the aesthetics.
+                    <br><br>
+                    Language learning is a long game, and patience is the only real strategy. I'm in it for the long run.
+                </p>
+                <div class="modal-meta">
+                    <span class="tech-tag">Hiragana ✓</span>
+                    <span class="tech-tag">Katakana ✓</span>
+                    <span class="tech-tag">Kanji (learning)</span>
+                    <span class="tech-tag">JLPT N5</span>
+                    <span class="status-badge active" style="position:static">Ongoing</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ── CURSOR ──
+        const dot = document.getElementById('cursorDot');
+        const ring = document.getElementById('cursorRing');
+        let mx = 0, my = 0, rx = 0, ry = 0;
+
+        document.addEventListener('mousemove', e => {
+            mx = e.clientX; my = e.clientY;
+            dot.style.transform = `translate(${mx - 4}px, ${my - 4}px)`;
+        });
+
+        function animateRing() {
+            rx += (mx - rx) * 0.12;
+            ry += (my - ry) * 0.12;
+            ring.style.transform = `translate(${rx - 18}px, ${ry - 18}px)`;
+            requestAnimationFrame(animateRing);
+        }
+        animateRing();
+
+        document.querySelectorAll('a, button, .project-card, .contact-link, .btn-primary, .btn-outline').forEach(el => {
+            el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+            el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
+        });
+
+        // ── SCROLL REVEAL ──
+        const reveals = document.querySelectorAll('.reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry, i) => {
+                if (entry.isIntersecting) {
+                    setTimeout(() => entry.target.classList.add('visible'), i * 80);
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(el => observer.observe(el));
+
+        // ── SKILL BARS ──
+        const barObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.querySelectorAll('.skill-bar-fill').forEach(bar => {
+                        bar.style.width = bar.dataset.w + '%';
+                    });
+                    barObserver.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.3 });
+        document.querySelectorAll('.skills-list').forEach(el => barObserver.observe(el));
+
+        // ── MODALS ──
+        function openModal(id) {
+            document.getElementById(id).classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeModal(id) {
+            document.getElementById(id).classList.remove('active');
+            document.body.style.overflow = '';
+        }
+        function handleOverlayClick(e, id) {
+            if (e.target === document.getElementById(id)) closeModal(id);
+        }
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                document.querySelectorAll('.modal-overlay.active').forEach(m => {
+                    m.classList.remove('active');
+                    document.body.style.overflow = '';
+                });
+            }
+        });
+
+        // ── NAV shrink on scroll ──
+        window.addEventListener('scroll', () => {
+            const nav = document.querySelector('nav');
+            nav.style.padding = window.scrollY > 50 ? '12px 5%' : '20px 5%';
+        });
+    </script>
+</body>
+</html>
